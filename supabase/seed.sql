@@ -1,0 +1,2 @@
+-- Phase 1 intentionally has no shared business seed data.
+-- Test identities and organizations are created by isolated database tests.

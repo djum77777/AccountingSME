@@ -1,0 +1,22 @@
+# dependencies and builds
+node_modules/
+.next/
+out/
+coverage/
+.npm-cache/
+*.tsbuildinfo
+
+# local secrets
+.env
+.env.*
+.env.local
+!.env.example
+
+# Supabase local state
+supabase/.branches/
+supabase/.temp/
+
+# editor and OS files
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,126 @@
+Part I — Product Definition
+1. Target Customer
+Primary users are Indonesian SMEs/UMKM, especially small retail, online sellers, trading/distribution, simple service businesses, and other owner-managed businesses. The product should not assume that every customer uses the same fields, terminology, workflow, dashboard, or reports.
+
+Initial plan: one organization/business account supports up to 3 active users. Do not make employees share credentials. Each person should have an individual login and role.
+
+2. Product Modes
+Business Mode is for owners and staff. It uses plain business language such as Sales, Purchases, Expenses, Products, Stock, Customers, Suppliers, Cash, Bank, and Reports.
+
+Accounting Mode is for an accountant, finance-savvy owner, or authorized admin. It exposes Chart of Accounts, Journal Entries, General Ledger, Trial Balance, Opening Balance, Accounting Periods, Adjustments, and Period Closing.
+
+3. What Users May Customize
+Users may customize operational forms, custom fields, labels, custom dimensions, table columns, saved views, dashboards, navigation visibility, and management reports.
+
+Examples of custom dimensions: Branch, Project, Department, Salesperson, Marketplace, Region, Store, Channel, Campaign, or another organization-specific classification.
+
+Examples of custom fields: Brand, Shelf Location, Warranty Period, Device Serial Number, Delivery Driver, Client Industry, Marketplace Order ID, Project Name, or any organization-specific metadata.
+
+4. What Users Must Not Be Able to Break
+Users must not be allowed to change double-entry balancing rules, alter posted journal lines without a controlled reversal, disable tenant isolation, directly edit audit logs, bypass closed accounting periods, redefine core monetary calculations, or modify inventory costing logic through the customization UI.
+
+Golden product rule: users control what information they capture, how they see it, and how they analyze it; the application controls how accounting mathematics works.
+
+Part II — Accounting Concepts in Plain English
+5. Double-Entry Accounting
+Every financial event affects at least two accounts. The total debit amount must equal the total credit amount. Your SME user does not need to think in debit/credit for ordinary work; the application creates those entries automatically.
+
+Example: a cash sale of Rp100,000 may increase Cash and increase Sales Revenue. If a product with Rp60,000 cost was sold, the same business event also reduces Inventory and records Rp60,000 Cost of Goods Sold. The user records one sale; the accounting engine posts all required journal lines.
+
+6. Chart of Accounts
+The Chart of Accounts is the organized list of financial buckets used by the ledger. Typical categories are Assets, Liabilities, Equity, Revenue, Cost of Goods Sold, Operating Expenses, Other Income, Other Expenses, and Tax accounts.
+
+Provide recommended Indonesian SME templates, but allow authorized users to add subaccounts or business-friendly display labels. Do not allow deletion of an account that has posted activity.
+
+7. Journal Entry and Journal Lines
+A journal entry is the accounting record of one event. Journal lines are the individual debit/credit lines inside it. Posted journal entries should be treated as immutable. Corrections should use reversal plus corrected posting rather than silent editing.
+
+8. General Ledger
+The General Ledger is the detailed history for every account. It is the source from which financial reports should ultimately reconcile.
+
+9. Trial Balance
+The Trial Balance summarizes account balances and is a basic accounting health check. Total debits and total credits must balance. A balanced trial balance does not prove every transaction is correct, but an unbalanced one proves something is wrong.
+
+10. Profit & Loss
+Profit & Loss answers: how much did the business earn, what did it cost to generate those sales, what operating expenses occurred, and what profit or loss resulted over a period.
+
+11. Balance Sheet / Financial Position
+The Balance Sheet answers: what the business owns, what it owes, and the owner's equity at a point in time. The accounting equation is Assets = Liabilities + Equity.
+
+12. Inventory and COGS
+Inventory is an asset until sold. When inventory is sold, its cost moves from Inventory to Cost of Goods Sold. For MVP, use Weighted Average Cost unless an Indonesian accountant advises a different default for the target segment. Architect the system so FIFO can be added later.
+
+13. Accounts Receivable and Accounts Payable
+Accounts Receivable is money customers still owe the business. Accounts Payable is money the business still owes suppliers. Partial payments must reduce the open balance without losing the original invoice/bill.
+
+14. Opening Balance
+Opening Balance establishes the financial position when a business begins using the app. It can include Cash, Bank, Inventory, Receivables, Payables, Loans, Assets, and Owner Capital. The opening entry must balance.
+
+15. Period Closing
+When a month or accounting period is closed, ordinary users should not be able to change transactions inside it. Authorized users may reopen it, but the action must be recorded in the audit log.
+
+16. Audit Trail
+Audit history records who changed what and when. It should cover posting, reversals, configuration changes, permissions, period close/reopen, tax settings, and other sensitive actions. Audit logs should be append-only from the application user's perspective.
+
+17. SAK EMKM and Tax
+Design financial statements so they can support applicable Indonesian SME reporting practices, including SAK EMKM-oriented financial position, profit/loss, and notes. However, do not market the system as automatically compliant until the accounting model is reviewed by a qualified Indonesian accountant.
+
+Treat Indonesian tax logic as configurable and versioned. Tax rates and eligibility rules can change. Store rule type, rate, calculation base, eligibility, effective start date, effective end date, and organization tax profile. Do not hard-code permanent tax assumptions into sales or purchase components.
+
+Part III — Technical Architecture
+18. Recommended Stack
+Frontend and web application: Next.js with TypeScript. Hosting: Vercel. Primary database: PostgreSQL, initially managed by Supabase. Authentication: Supabase Auth or an equivalent trusted provider supporting email/password and Google OAuth. File storage: private Supabase Storage or equivalent object storage. OCR/document recognition: start by benchmarking Google Document AI OCR/Form Parser for Indonesian documents. Application/accounting logic: server-side TypeScript/domain services. Testing: unit, integration, database/RLS, and end-to-end tests.
+
+19. Why PostgreSQL
+Accounting data is highly relational. Sales connect to customers, lines, payments, inventory movements, journals, tax, documents, and reports. PostgreSQL supports transactions, constraints, foreign keys, numeric/decimal money types, indexes, and reliable relational queries. It is a better source of truth than browser localStorage.
+
+20. Storage Strategy
+Store structured accounting/business data in PostgreSQL. Store invoice/receipt images and PDFs in private object storage. Store only the file path/object identifier and metadata in PostgreSQL. Do not store sensitive accounting data or auth tokens in browser localStorage.
+
+Browser localStorage may hold harmless UI preferences such as selected language, theme, or collapsed navigation. Future offline support may use IndexedDB for temporary encrypted drafts, but the cloud database remains authoritative.
+
+21. Mobile Invoice Capture Infrastructure
+The web app can operate as a responsive PWA. On a phone, the user taps Scan Invoice or Upload Receipt, uses the browser camera/file chooser, and sends the image over HTTPS. The system stores the original file privately, submits it to OCR/document recognition, receives structured extraction, normalizes Indonesian dates/currency/numbers, attempts supplier/product matching, runs duplicate checks, and creates an editable draft.
+
+The OCR result must never directly post financial records. Required flow: capture → private upload → OCR → normalization → matching → draft → user review → explicit confirm/post → accounting engine.
+
+22. Multi-Tenant Architecture
+One application and database can serve many SME organizations. Every tenant-owned table must be scoped with organization_id or an equivalent secure tenant key. Authorization must be checked on the server and preferably reinforced by database Row Level Security. A user from Organization A must never be able to query Organization B data even by changing a URL or API request.
+
+23. Money Data Types
+Never use JavaScript floating-point arithmetic for financial values. Use PostgreSQL NUMERIC/DECIMAL and a decimal arithmetic library in application code. Store amount and currency explicitly. Do not rely on display-formatted strings for calculations.
+
+24. Environments
+Maintain at least local/development and production environments. Add staging before external beta if practical. Development data must not be mixed with real customer accounting data. Production secrets, OAuth credentials, database keys, OCR credentials, and storage credentials belong in environment variables/secret management, never in Git.
+
+25. Infrastructure Cost Philosophy
+Keep the first build lean. Free tiers are appropriate while building. A small production deployment can begin with managed hosting/database and scale by usage. Meter OCR per organization because document processing is likely to grow more directly with customer usage than normal database transactions. Re-check provider pricing before launch rather than hard-coding old price assumptions into your business model.
+
+Part IV — Security and Authentication Baseline
+26. Authentication
+Allow email/password and Google login. Password recovery should use verified email reset link or OTP. Do not use favorite/security questions. Passwords must be hashed through a trusted auth provider; never store plaintext or reversibly encrypted passwords.
+
+27. Session and Access Security
+Use secure HttpOnly/SameSite cookies where appropriate, server-side authorization, rate limiting, input validation, CSRF protection where applicable, XSS-safe rendering, secure file upload validation, and least-privilege credentials.
+
+28. Roles
+Initial roles: Owner, Admin/Accountant, Staff. Owner manages organization, users, permissions, financial settings, tax settings, closing/reopening periods, exports, and critical customization. Admin/Accountant can perform accounting and reporting tasks. Staff receives only operational permissions required for their job.
+
+29. Indonesia Data Privacy
+Build with data-minimization, lawful processing, data correction/export workflows, account closure handling, retention policies, incident logging, and privacy disclosure in mind. Before public commercial launch, obtain proper legal guidance on Indonesian PDP requirements and any PSE obligations applicable to the service.
+
+Part V — How to Work with Codex
+30. Master Working Rule
+Do not ask Codex to build the entire application in one prompt. Keep the full product vision available as context, but give Codex one implementation phase at a time.
+
+31. At the Start of Every Phase
+Tell Codex to inspect the existing repository, read the architecture/docs from previous phases, preserve already-tested behavior, and explain any migration or architectural change before making it. Require tests in the same phase as the feature.
+
+32. At the End of Every Phase
+Require Codex to summarize: files changed, database migrations, environment variables, tests added, tests run, unresolved warnings, manual steps you must perform, and exact commands to verify locally.
+
+33. Git Discipline
+Create a clean checkpoint before each major phase. Use meaningful commits. Do not combine unrelated experiments with core accounting changes. Tag major stable milestones if useful. If a phase introduces a regression, revert to the last passing checkpoint instead of stacking patches on top of unknown behavior.
+
+34. Suggested Repository Structure
+Use a structure that separates UI, application services, domain/accounting logic, data access, integrations, and tests. Example concepts: app/ for routes/UI; components/ for reusable UI; lib/auth; lib/db; domain/accounting; domain/inventory; domain/sales; domain/purchases; services/ocr; services/reporting; migrations/; tests/; docs/. Exact paths may vary, but keep financial logic out of React presentation components.
