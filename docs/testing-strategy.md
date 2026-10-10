@@ -1,6 +1,6 @@
 # Testing Strategy
 
-> Current evidence (Phase 3): 80 pgTAP assertions pass across tenancy, customization, and accounting; a separate two-client race test proves concurrent idempotency; 13 TypeScript unit tests pass; lint, type-check, formatting, and the Next.js production build pass. See `phase-3-implementation.md`.
+> Current evidence (Phase 4): 126 pgTAP assertions pass across tenancy, customization, accounting, and inventory; separate two-client race tests prove journal idempotency and serialized weighted-average receipts; 17 TypeScript unit tests pass. See `phase-4-implementation.md`.
 
 ## 1. Quality model
 

@@ -113,3 +113,7 @@ The following are architecture assumptions, not claims of Indonesian accounting/
 - Confirm IDR precision and rounding for prices, quantities, discounts, tax, COGS, and journal totals.
 - Confirm foreign-currency scope and exchange-gain/loss policy if enabled.
 - Confirm SAK EMKM statement structure, notes, comparative periods, and required disclosures before any compliance claim.
+
+## 14. Phase 4 inventory integration implemented
+
+Inventory financial events call the existing central posting function in the same transaction as movement and cost-state changes. An inbound movement debits the product's inventory asset account and credits its authorized offset; an outbound movement does the reverse. The caller cannot supply outbound cost. Location transfers conserve quantity/value and have no ledger effect. A posting failure rolls back operation, movement, and cost state together. See `phase-4-implementation.md` for the separate quantity, cost, and accounting flows and the policy questions still requiring professional approval.

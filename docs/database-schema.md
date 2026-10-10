@@ -156,3 +156,7 @@ Minimum indexes cover organization plus business date/status, foreign keys, docu
 ## 12. Migration policy
 
 All schema, functions, RLS policies, and seed reference data are version-controlled migrations. Migrations are forward-tested on representative data, reviewed for locks/data loss, and applied through environment-specific deployment controls. Destructive schema changes require an export/backup, a compatibility plan, and explicit approval.
+
+## 13. Phase 4 physical schema implemented
+
+Migration `202610010004_phase4_inventory.sql` implements `product_categories`, `organization_units`, `inventory_locations`, `products`, `inventory_operations`, append-only `inventory_movements`, protected `inventory_cost_states`, and the `inventory_valuation` and `inventory_low_stock` security-invoker views. Inventory balances are projections of movement history; application roles cannot directly mutate them. Products and services share the catalog while database constraints prevent service inventory tracking.

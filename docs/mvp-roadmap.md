@@ -43,46 +43,52 @@ Exit: two organizations can use different templates and metadata with complete i
 
 Exit achieved: accounting invariants, atomic rollback, immutability, reversal, period, tenant/RBAC, two-session concurrency, General Ledger, and Trial Balance tests pass against PostgreSQL. The seeded account policy remains explicitly subject to qualified Indonesian accountant review.
 
-## 6. Phase 4 — Parties, catalog, sales, and AR
+## 6. Phase 4 — Product/service masters and inventory costing (complete)
 
-Implement customers, products/services, document numbering, sales invoices, receipts, partial allocations, source-to-journal posting, tax-engine interface (only professionally approved initial rules), and basic P&L/financial-position effects. Defer stocked-product confirmation until inventory integration is available or restrict the phase to services/non-stock items.
+Implemented catalog categories/units/SKU/barcode, services, inventory-tracked products, locations, opening stock, stock in/out, adjustments, damage/loss, stock counts, transfers, low-stock query, immutable movement history, locked weighted-average cost, valuation, central-journal integration, RLS, and concurrency/reconciliation tests.
 
-Exit: cash/credit service-sale scenarios reconcile through AR and GL, including reversal and closed-period behavior.
+Exit achieved: the required 10@Rp10,000 + 10@Rp14,000 − 5 example produces 15 units valued at Rp180,000; accounting failures roll back inventory; historical cost snapshots and tenant isolation are proven.
 
-## 7. Phase 5 — Inventory and stocked sales
+## 7. Phase 5 — Customer and supplier masters (complete)
 
-Implement locations/default location, inventory movements, locked weighted-average cost state, opening inventory detail, purchases needed to receive stock, sale issues, COGS, returns/corrections, and inventory valuation/control reconciliation. Finalize policies for negative stock, backdating, returns, landed cost, and rounding before coding their behavior.
+Implemented organization-scoped customer/supplier roles on stable party identities, retained archive/reactivation history, contacts, typed addresses, role-specific payment terms, optional tax metadata, notes, Phase 2 contact custom fields, advisory duplicate checks, directory search, bilingual workflows, RLS, audit events, and imports-ready external references. No purchase, sales, payment, AR, or AP transactions were introduced, and party records contain no editable balance fields.
 
-Exit: concurrency and property tests reproduce quantity/value/COGS and reconcile inventory to GL.
+Exit achieved: two tenants maintain isolated party masters; archive/reactivation preserves history and stable identifiers; duplicate, permission, audit, metadata, and cross-tenant tests pass.
 
-## 8. Phase 6 — Purchases, AP, expenses, and cash/bank
+## 8. Phase 6 — Purchases and AP
 
-Complete suppliers, purchase bills, AP allocations/payments, expense flows, cash/bank accounts, transfers, fees, corrections, and subledger reporting. Expand opening balances for detailed AR/AP and add aging reports.
+Implement purchase document numbering, purchase bills/receipts, inventory receipts through the Phase 4 authority, expenses, AP allocations/payments, supplier returns/corrections, and AP aging/control reconciliation.
 
-Exit: end-to-end operating cycle (purchase → stock/expense → sale → receipt/payment) reconciles across subledgers, inventory, cash/bank, and GL.
+Exit: purchase-to-stock/expense-to-payment scenarios reconcile inventory, AP, cash/bank, and GL, including retry, reversal, and closed-period behavior.
 
-## 9. Phase 7 — Management reporting and accounting integration
+## 9. Phase 7 — Sales, AR, receipts, returns, and COGS
+
+Implement sales document numbering, sales invoices, customer receipts and partial allocations, inventory issues through the Phase 4 authority, COGS, returns/corrections, the professionally approved tax-engine interface, and AR aging/control reconciliation.
+
+Exit: cash/credit stocked and service sales reconcile AR, inventory, COGS, tax, cash/bank, and GL under retry, reversal, and closed-period scenarios.
+
+## 10. Phase 8 — Management reporting and accounting integration
 
 Integrate the Phase 2 metadata with accounting entities, snapshot dimensions on postings, and implement dashboards plus allowlisted management reports. Keep standard report semantics protected and extend saved views without accepting executable query fragments.
 
 Exit: malicious/invalid metadata fails closed; customization cannot alter accounting, tenant, security, or audit invariants.
 
-## 10. Phase 8 — Documents, OCR, imports, and exports
+## 11. Phase 9 — Documents, OCR, imports, and exports
 
 Implement private upload validation, document linking, OCR provider benchmark/adapter, Indonesian normalization, matching/duplicates, editable draft review, and explicit confirmation. Add staged imports with preview/idempotency and audited background exports with short-lived private downloads.
 
 Exit: OCR/import output cannot post without authorized confirmation; failure/retry/duplicate/privacy tests pass.
 
-## 11. Phase 9 — Production readiness and external beta
+## 12. Phase 10 — Production readiness and external beta
 
 Complete staging, monitoring/alerts, quotas and OCR metering, backup/PITR and restore drill, incident/data-request runbooks, accessibility/performance review, security assessment, legal/privacy review, accountant/tax acceptance, SAK EMKM wording decision, support procedures, and production access controls.
 
 Exit: operational owners accept RPO/RTO, restore and reconciliation evidence, security findings are resolved or explicitly accepted, and no unreviewed compliance claims remain.
 
-## 12. Post-MVP candidates
+## 13. Post-MVP candidates
 
 FIFO costing, transaction-level multi-currency/FX, cash-flow statements, advanced tax filing integrations, payroll, manufacturing, automatic bank feeds/reconciliation, full offline drafts, consolidated/multi-entity reporting, and broader roles/users require new reviewed architecture decisions rather than silent expansion. Organization base currency already accepts any valid three-letter currency code; the deferred item is posting and settling transactions in multiple currencies.
 
-## 13. Recommended Phase 4 first slice
+## 14. Recommended Phase 5 first slice
 
-Start with customers, products/services, document numbering, service/non-stock sales invoices, customer receipts, and AR allocation history. Route confirmation, receipt, reversal, and retry through the Phase 3 posting authority and reconcile AR to its control account. Defer stocked-product confirmation until the inventory movement and weighted-average costing authority is implemented.
+Start with customer and supplier masters, retained deactivation history, duplicate detection, contacts/addresses/tax identifiers, RLS, and bilingual list/detail screens. Keep purchasing and sales documents in their dependency-ordered Phases 6 and 7 so they consume stable party identifiers and the tested Phase 4 costing authority.

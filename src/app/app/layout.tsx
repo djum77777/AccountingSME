@@ -12,7 +12,7 @@ export default async function AuthenticatedLayout({
     <div className="app-frame">
       <aside className="app-sidebar">
         <div>
-          <p className="eyebrow">Phase 2</p>
+          <p className="eyebrow">Phase 5</p>
           <nav>
             <Link href="/app">{t.dashboard}</Link>
             <Link href="/setup">{t.createOrganization}</Link>

@@ -74,3 +74,7 @@ Maintain dependency and secret scanning, patch SLAs by severity, security test c
 ## 11. Security verification gates
 
 Release gates include automated RLS cross-tenant tests, authorization matrix tests, dependency/secret scans, upload abuse tests, session/CSRF/XSS checks, webhook replay tests, backup restore tests, and manual review of high-risk changes. Before beta, obtain an independent security review focused on tenant isolation and financial-record integrity.
+
+## 12. Phase 4 inventory controls implemented
+
+Inventory adds `inventory.read` and `inventory.manage`. Owner and Admin/Accountant receive both defaults; Staff receives neither. Organization-scoped RLS applies to catalog masters, locations, operations, cost state, and movements. Authenticated application roles cannot directly insert, update, or delete inventory rows: security-definer RPCs validate permission and tenancy, while triggers protect derived state and immutable history. Cross-tenant account and master references are rejected. Per-pool and per-idempotency-key transaction locks prevent lost updates and duplicate financial effects.

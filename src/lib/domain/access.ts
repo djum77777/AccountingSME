@@ -22,6 +22,8 @@ export const permissions = [
   "accounting.read",
   "accounting.post",
   "accounting.initialize",
+  "inventory.read",
+  "inventory.manage",
 ] as const;
 export type Permission = (typeof permissions)[number];
 
@@ -34,6 +36,8 @@ const rolePermissions: Record<MembershipRole, ReadonlySet<Permission>> = {
     "storage.write",
     "accounting.read",
     "accounting.post",
+    "inventory.read",
+    "inventory.manage",
   ]),
   staff: new Set(["storage.read", "storage.write"]),
 };

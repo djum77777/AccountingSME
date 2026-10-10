@@ -152,6 +152,12 @@ export default async function AccountingPage({
         <div className="button-row compact">
           <Link
             className="button secondary"
+            href={`/app/organizations/${organizationId}/inventory`}
+          >
+            {t.inventory}
+          </Link>
+          <Link
+            className="button secondary"
             href={`/app/organizations/${organizationId}/settings/customization`}
           >
             {t.customization}

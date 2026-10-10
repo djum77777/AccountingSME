@@ -22,4 +22,13 @@ describe("roleHasPermission", () => {
     );
     expect(roleHasPermission("staff", "accounting.read")).toBe(false);
   });
+
+  it("allows owners and accountants to manage inventory but denies staff", () => {
+    expect(roleHasPermission("owner", "inventory.manage")).toBe(true);
+    expect(roleHasPermission("admin_accountant", "inventory.read")).toBe(true);
+    expect(roleHasPermission("admin_accountant", "inventory.manage")).toBe(
+      true,
+    );
+    expect(roleHasPermission("staff", "inventory.read")).toBe(false);
+  });
 });
