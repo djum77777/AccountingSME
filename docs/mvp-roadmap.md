@@ -55,11 +55,11 @@ Implemented organization-scoped customer/supplier roles on stable party identiti
 
 Exit achieved: two tenants maintain isolated party masters; archive/reactivation preserves history and stable identifiers; duplicate, permission, audit, metadata, and cross-tenant tests pass.
 
-## 8. Phase 6 — Purchases and AP
+## 8. Phase 6 — Purchases and AP (complete)
 
-Implement purchase document numbering, purchase bills/receipts, inventory receipts through the Phase 4 authority, expenses, AP allocations/payments, supplier returns/corrections, and AP aging/control reconciliation.
+Implemented numbered cash/credit purchase documents, stocked-product and service lines, discounts/additional costs, inventory receipts through the Phase 4 authority, expense and AP/cash journals through the Phase 3 authority, partial/full and multi-invoice allocations, supplier returns/credits, derived open items, AP aging/control reconciliation, RLS, audit, idempotency, concurrency protection, and bilingual screens.
 
-Exit: purchase-to-stock/expense-to-payment scenarios reconcile inventory, AP, cash/bank, and GL, including retry, reversal, and closed-period behavior.
+Exit achieved: purchase-to-stock/expense-to-payment scenarios reconcile inventory, AP, cash/bank, and GL; the 10 × Rp50,000 golden purchase settles through Rp200,000 and Rp300,000 payments; retries, concurrent settlement, rollback, tenant isolation, and closed-period rejection pass.
 
 ## 9. Phase 7 — Sales, AR, receipts, returns, and COGS
 

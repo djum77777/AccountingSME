@@ -634,6 +634,48 @@ textarea:focus {
   grid-template-columns: 0.9fr 1fr 1fr 0.8fr 1.3fr 1.5fr;
 }
 
+.purchase-form {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+.purchase-line-form {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+.purchase-draft-row,
+.ap-aging-row,
+.purchase-history-row {
+  display: grid;
+  gap: 1rem;
+  min-width: 850px;
+  padding: 0.8rem 0;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+}
+.purchase-draft-row {
+  grid-template-columns: 0.9fr 1.3fr 1.2fr 2fr 1fr;
+}
+.ap-aging-row {
+  grid-template-columns: 1fr 1.5fr 1fr 1fr 0.8fr;
+}
+.purchase-history-row {
+  grid-template-columns: 1fr 1.5fr 0.8fr 0.8fr 1.3fr;
+}
+.purchase-history-row > span:first-child {
+  display: grid;
+  gap: 0.2rem;
+}
+.purchase-history-row small,
+.purchase-ledger-summary {
+  color: var(--muted);
+}
+.purchase-ledger-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1rem;
+  font-size: 0.9rem;
+}
+
 .party-search-form {
   display: grid;
   grid-template-columns: minmax(240px, 2fr) minmax(150px, 1fr) auto auto;
