@@ -1,6 +1,6 @@
 # Testing Strategy
 
-> Current evidence (Phase 4): 126 pgTAP assertions pass across tenancy, customization, accounting, and inventory; separate two-client race tests prove journal idempotency and serialized weighted-average receipts; 17 TypeScript unit tests pass. See `phase-4-implementation.md`.
+> Current evidence (Phase 6): 196 pgTAP assertions pass across tenancy, customization, accounting, inventory, parties, purchases, and AP; separate two-client race tests prove journal idempotency, serialized weighted-average receipts, idempotent purchase confirmation, and settlement concurrency. See `phase-6-implementation.md`.
 
 ## 1. Quality model
 

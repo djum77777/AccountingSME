@@ -43,6 +43,12 @@ export default async function PartiesPage({
         <div className="button-row compact">
           <Link
             className="button secondary"
+            href={`/app/organizations/${organizationId}/purchases`}
+          >
+            {t.purchases}
+          </Link>
+          <Link
+            className="button secondary"
             href={`/app/organizations/${organizationId}/inventory`}
           >
             {t.inventory}
